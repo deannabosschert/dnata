@@ -13,7 +13,7 @@ function buildMenu (menu) {
 		if (submenu) {
 			submenu.style.left = `${Number(getComputedStyle(menu).width.slice(0, -2)) / 2 + 2 * rem}px`;
 			submenu.style.top = `${5 * rem}px`;
-			buildMenu(submenu)
+			buildMenu(submenu);
 		}
 	}
 }

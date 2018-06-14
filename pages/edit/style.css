@@ -66,7 +66,7 @@ body>aside {
 	background: #F9F9F9;
 	color: rgb(30, 30, 52);
 	width: 20rem;
-	height: calc(100vh - 3rem);
+	min-height: calc(100vh - 3rem);
 	display: flex;
 }
 
