@@ -1,8 +1,8 @@
-#content {
+#slide1 {
 	padding: 5rem 25vw 0 25vw;
 }
 
-#trainer {
+#slide1>#trainer {
 	position: relative;
 	top: 0;
 	left: 0;
