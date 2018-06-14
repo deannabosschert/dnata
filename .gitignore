@@ -1,3 +1,5 @@
 .gitignore
 node_modules
 pages/*
+!pages/slide
+!pages/edit
