@@ -15,6 +15,9 @@ function attachPipeRender (req, res, next) {
 app.use(express.static("pages"));
 app.use(attachPipeRender);
 app.get("/view/:trainingId/:slideNumber", renderTraining);
+app.get("/view/:trainingId", (req, res) => {
+	res.redirect(`/view/${req.params.trainingId}/1`);
+});
 app.get("/edit/:trainingId", editTraining);
 
 app.listen(PORT, () => {
@@ -29,10 +32,11 @@ async function renderTraining (req, res) {
 			const fileOrFolderStats = await stats(`${trainingPath}/${fileOrFolder}`);
 			return fileOrFolderStats.isDirectory() && fileOrFolder.includes("slide");
 		});
+		const slideNumber = Number(req.params.slideNumber);
 		const locals = {
 			id: req.params.trainingId,
-			slideNumber: Number(req.params.slideNumber),
-			folder: `${req.params.trainingId}/slide${req.params.slideNumber}`,
+			slideNumber: slideNumber,
+			folder: `${req.params.trainingId}/slide${slideNumber}`,
 			totalSlides: slides.length
 		};
 		res.pipeRender("slide", locals);

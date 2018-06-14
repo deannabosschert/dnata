@@ -30,6 +30,7 @@ function renderError (res, error) {
 			<style>::-webkit-scrollbar { display: none; }</style>
 		</head>
 		<body style="font-family: 'Fira Code', monospace; width: 50vw; margin: 25vh auto">
+			<div style="position: absolute; width: 8rem; height: 8rem; background: rgb(0, 136, 203); top: 0; left: 2rem; display: inline-flex; justify-content: center; align-items: center; flex-wrap: wrap;"><img style="width: 75%; filter: brightness(0) invert(1);" src="/slide/logo.png" alt="Logo"></div>
 			<h1 style="display: block; font-size: 3rem; margin-bottom: -1.75rem">Oh no! 😱</h1>
 			<p style="display: block; font-size: 1.5rem; color: rgb(150, 150, 150)">INTERNAL SERVER ERROR ${error.code}: ${error.message.code}</p>
 			<p style="font-family: sans-serif; margin-top: 2rem; font-size: 2rem;">Don't worry, it's not your fault.</p>
