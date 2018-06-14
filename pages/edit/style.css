@@ -1,0 +1,249 @@
+:root {
+	--dnataBlue: 0, 136, 206;
+	--dnataGreen: 105, 190, 40;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-rendering: optimizeLegibility;
+}
+
+:focus {
+	outline: none;
+}
+
+button:hover {
+	cursor: pointer;
+}
+
+body {
+	display: flex;
+	flex-wrap: wrap;
+	font-family: "Aller";
+}
+
+body>* {
+	transition: filter .33s ease-out;
+}
+
+@keyframes loading {
+	100% {
+		transform: rotate(1800deg);
+	}
+}
+
+body>header {
+	background: rgb(var(--dnataBlue));
+	color: white;
+	padding: .5rem;
+	width: 100vw;
+} body>header>a>img {
+	width: 1.5rem;
+	margin: .25rem;
+} body>header>* {
+	vertical-align: middle;
+	display: inline-block;
+} body>header>h1 {
+	margin-left: 1rem;
+	font-size: 1rem;
+} body>header>a {
+	border-radius: 50%;
+	height: 2rem;
+	margin-left: .3rem;
+	transition: background .2s ease;
+} body>header>a:hover,
+ body>header>a:focus {
+	background: rgba(255, 255, 255, .3);
+	padding: .25rem;
+} body>header>a:hover>img,
+ body>header>a:focus>img {
+ width: 1rem;
+}
+
+body>aside {
+	background: #F9F9F9;
+	color: rgb(30, 30, 52);
+	width: 20rem;
+	height: calc(100vh - 3rem);
+	display: flex;
+}
+
+#toolbar,
+#sidebar,
+#toolbar>*,
+#sidebar>* {
+	transition: all .2s ease;
+}
+
+#toolbar,
+#sidebar, {
+	height: 100%;
+} #toolbar>*,
+#sidebar>* {
+	display: inline-block;
+	width: 100%;
+}
+
+#toolbar {
+	flex-basis: 3.5rem;
+	border-right: 1px solid rgba(0, 0, 0, .05);
+} #toolbar>* {
+	height: 3.5rem;
+} #toolbar>button {
+	background-color: transparent;
+	border: none;
+	filter: saturate(.2) opacity(.6);
+} #toolbar>button:hover,
+ #toolbar>button:focus {
+	background-color: #EAEAEA;
+	filter: saturate(1);
+} #toolbar>button>img {
+	width: 50%;
+}
+
+#sidebar {
+	flex-basis: 16.5rem;
+	position: relative;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-right: 1px solid rgba(0, 0, 0, .05);
+	padding-top: .5rem;
+} #sidebar>#addSlide {
+	background: none;
+	border: none;
+	height: 3rem;
+	margin-bottom: 5rem;
+} #sidebar>#addSlide:hover,
+ #sidebar>#addSlide:focus {
+	background-color: #EAEAEA;
+} #sidebar>#addSlide>img {
+	width: 2rem;
+} #sidebar::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, .2);
+	border-radius: 999rem;
+} #sidebar::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(0, 0, 0, .3);
+	border-radius: 999rem;
+} #sidebar::-webkit-scrollbar {
+	width: 1rem;
+} #sidebar::-webkit-scrollbar-thumb {
+	border-radius: 999rem;
+	box-shadow: 0 0 0 .33rem #F9F9F9 inset;
+}
+
+@keyframes fadein {
+	100% {
+		opacity: 1;
+	}
+}
+
+.slideWrapper {
+	position: relative;
+	margin-top: -.5rem;
+} .slideWrapper>* {
+	transition: opacity .1s ease;
+	opacity: 0;
+} .slideWrapper:hover>* {
+	opacity: 1;
+}
+
+#sidebar .slide {
+	transition: box-shadow .2s ease, border .2s ease;
+	opacity: 0;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background: white;
+	margin: .5rem;
+	border-radius: 1rem;
+	transform-origin: left top;
+	position: absolute;
+	cursor: pointer;
+	border: 3px solid rgba(0, 0, 0, .1);
+} #sidebar .slide:hover {
+	box-shadow: 0 1rem 5rem 0 rgba(0, 0, 0, .25);
+} #sidebar .slide:focus {
+	box-shadow: 0 1rem 5rem 0 rgba(0, 0, 0, .25);
+	border: 1rem solid rgb(var(--dnataBlue));
+}
+
+.removeSlide {
+	position: absolute;
+	right: .5rem;
+	bottom: 0;
+	width: 3rem;
+	height: 3rem;
+	background: none;
+	border: none;
+	border-radius: 50%;
+	transition: background .2s ease;
+	z-index: 999;
+} .removeSlide:hover,
+ .removeSlide:focus {
+	 background: rgb(var(--dnataBlue));
+} .removeSlide>img {
+	width: 50%;
+	transition: all .1s ease;
+} .removeSlide:hover>img,
+.removeSlide:focus>img {
+	filter: brightness(0) invert(1);
+	transform-origin: center center;
+	transform: translateY(.15rem) rotate(-45deg);
+}
+
+main {
+	flex: 1;
+}
+
+.menu {
+	display: none;
+	width: 16rem;
+	background: rgba(255, 255, 255, .75);
+	border-radius: .125rem;
+	box-shadow: 0 .1rem .5rem  rgba(0, 0, 0, .125);
+	list-style: none;
+	padding: .5rem 0;
+	position: relative;
+	color: black;
+} #contextMenu {
+	position: absolute;
+	user-select: none;
+} .menu.show {
+	display: inline-block;
+} #contextMenu li {
+	display: inline-flex;
+	align-items: center;
+	width: 100%;
+	height: 2.5rem;
+	padding: 0 .5rem;
+} #contextMenu li>img {
+	height: 50%;
+	margin: 0 .75rem 0 .25rem;
+	filter: saturate(.2) opacity(.6);
+} #contextMenu li:hover {
+	cursor: pointer;
+	filter: none;
+	color: white;
+	background: rgb(var(--dnataBlue));
+} #contextMenu li:hover>img {
+	filter: brightness(0) invert(1);
+} #contextMenu .borderBottom {
+	border-bottom: 1px solid rgba(0, 0, 0, .1);
+} #contextMenu .more::after {
+	content: "";
+	display: inline-block;
+	background: url(./images/more.png) no-repeat center center;
+	background-size: cover;
+	width: 1.25rem;
+	height: 1.25rem;
+	position: absolute;
+	right: 1rem;
+} #contextMenu .more:hover::after {
+	filter: invert(1);
+}
+
+.blur {
+	filter: blur(4px) brightness(.9);
+}

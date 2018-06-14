@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="/edit/style.css">
+	<title>Editing <%- id -%></title>
+</head>
+<body>
+	<header>
+		<a href="/" title="Terug"><img src="/edit/images/prev.png" alt=""></a>
+		<h1><%- id -%> aanpassen</h1>
+	</header>
+	<aside>
+		<div id="toolbar">
+			<button title="Slide-overzicht"><img src="/edit/images/slides.png" alt="Slide-overzicht"></button>
+			<button title="Layout kiezen"><img src="/edit/images/layout.png" alt="Layout kiezen"></button>
+			<button title="Template kiezen"><img src="/edit/images/template.png" alt="Template kiezen"></button>
+			<button title="Nieuwe slide toevoegen" class="addSlideButton"><img src="/edit/images/add.png" alt="Nieuwe slide toevoegen"></button>
+		</div>
+		<div id="sidebar">
+			<% slides.forEach((slide, i) => { %>
+			<div class="slideWrapper">
+				<article class="slide" tabindex="0"><%- include(`${folder}/${id}/${slide}/index.ejs`) -%></article>
+			</div>
+			<% }); %>
+			<button id="addSlide" class="addSlideButton" title="Nieuwe slide toevoegen"><img src="/edit/images/add.png" alt="Nieuwe slide toevoegen"></button>
+		</div>
+	</aside>
+	<main></main>
+	<ul id="contextMenu" class="menu">
+		<li data-icon="/edit/images/add.png" data-label="Nieuw..." onclick="openMenuInside(this)" class="borderBottom more">
+			<ul class="menu">
+				<li data-icon="/edit/images/title.png" data-label="Titel" onclick="addTitle()"></li>
+				<li data-icon="/edit/images/subtitle.png" data-label="Bijtitel" onclick="addSubtitle()"></li>
+				<li data-icon="/edit/images/paragraph.png" data-label="Paragraaf" onclick="addParagraph()"></li>
+				<li data-icon="/edit/images/figure.png" data-label="Figuur" onclick="addFigure()" class="borderBottom"></li>
+				<li data-icon="/edit/images/add.png" data-label="Slide" onclick="addSlide()"></li>
+			</ul>
+		</li>
+		<li data-icon="/edit/images/layout.png" data-label="Layout kiezen" onclick="void(0)"></li>
+		<li data-icon="/edit/images/template.png" data-label="Template kiezen" onclick="void(0)"></li>
+	</ul>
+	<script src="/edit/script.js"></script>
+	<script src="/edit/contextmenu.js"></script>
+</body>
+</html>

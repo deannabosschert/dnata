@@ -1,0 +1,15 @@
+{
+  "name": "dnata",
+  "version": "1.0.0",
+  "description": "Elearning environment for dnata",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Wouter Lem",
+  "license": "MIT",
+  "dependencies": {
+    "ejs-stream": "^1.0.0",
+    "express": "^4.16.3"
+  }
+}

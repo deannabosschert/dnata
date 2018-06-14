@@ -1,0 +1,7 @@
+<footer>
+	<nav>
+		<a class="<%= (slideNumber === 1) ? 'introduce' : '' %>" id="prev" href="/<%= id %>/<%= slideNumber - 1 %>" <%= (slideNumber < 2) ? 'disabled' : '' %>></a>
+		<a class="<%= (slideNumber === 1) ? 'introduce' : '' %>" id="stop" href="/"></a>
+		<a class="<%= (slideNumber === 1) ? 'introduce' : '' %>" id="next" href="/<%= id %>/<%= slideNumber + 1 %>" <%= (slideNumber > totalSlides - 2) ? 'disabled' : '' %>></a>
+	</nav>
+</footer>

@@ -1,0 +1,67 @@
+main {
+  background-image: url('images/clouds.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: sans-serif;
+  height: 100vh;
+}
+
+h1, h2{
+  margin-left: 4rem;
+  font-family: sans-serif;
+  color: white;
+}
+
+h1{
+  font-size: 3rem;
+}
+h2{
+  margin-top: -1.5rem;
+  font-size: 2rem;
+}
+
+main img{
+  max-width: 18rem;
+  background-color: rgba(245, 245, 255, 0.9);
+  border-radius: 25px;
+  border: 0.1rem solid grey;
+  position: relative;
+  display: inline-block;
+  box-shadow: 0.1rem 0.1rem 0.1rem black;
+}
+
+main .img-with-text {
+  text-align: justify;
+  width: 18.5rem;
+  display: inline-block;
+  margin-left: 4rem;
+}
+
+main .img-with-text img {
+    margin: 0 auto;
+}
+main p{
+  margin-left: 1rem;
+  color: white;
+  font-weight: 400;
+  font-size: 1.2rem;
+}
+
+main button {
+  background-color: rgba(245, 245, 255);
+  border: 0.1rem solid rgba(0, 0, 0, 0.25);
+  border-radius: 0.9rem;
+  color: rgba(22, 22, 22, 0.8);
+  display: block;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem auto;
+  margin-top: 3rem;
+  padding: 2rem 6rem;
+  position: relative;
+}
+
+button:hover {
+  background-color: #06aa4c;
+  color: #fff;
+}

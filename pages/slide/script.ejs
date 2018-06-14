@@ -1,0 +1,75 @@
+<script>
+//Navigation animations (with offset)
+["mouseenter", "mouseleave"].forEach(eventType => {
+	document.querySelector("nav").addEventListener(eventType, function () {
+		this.querySelectorAll("a").forEach((anchor, i) => {
+			setTimeout(() => {
+				anchor.classList.toggle("show");
+			}, i * 50);
+		});
+	});
+});
+
+//hide ui after introducing it for 3s
+document.querySelectorAll(".introduce").forEach((anchor, i) => {
+	setTimeout(() => {
+		anchor.classList.remove("introduce");
+	}, 3000 + 50 * i);
+});
+
+//disabled anchor tags
+document.querySelectorAll("a[disabled]").forEach(anchor => {
+	anchor.removeAttribute("href");
+});
+
+//start a countdown to prevent "racing" through slides
+let allowNext = false;
+setTimeout(() => {
+	allowNext = true;
+}, 3000);
+
+function notifyNotAllowed () {
+	if (document.querySelector("#notification")) return;
+	const notification = document.createElement("DIV");
+	notification.id = "notification";
+	const title = document.createElement("H1");
+	title.textContent = "Are you sure you have read the slide? 🤔";
+	const close = document.createElement("BUTTON");
+	close.textContent = "No I have not"
+	const anchor = document.createElement("A");
+	anchor.textContent = "Yes, take me to the next slide!";
+	close.addEventListener("click", () => {
+		notification.remove();
+	});
+	anchor.addEventListener("click", () => {
+		const next = document.querySelector("footer #next");
+		next.focus();
+		next.click();
+	});
+	[title, close, anchor].forEach(element => {
+		notification.appendChild(element);
+	});
+	document.body.prepend(notification);
+}
+
+//allow moving with arrow keys
+document.body.addEventListener("keydown", event => {
+	const key = event.key.match(/arrow(.+)/i);
+	if (!key) return;
+	const prev = document.querySelector("footer #prev");
+	const next = document.querySelector("footer #next");
+	switch (key[1].toLowerCase()) {
+		case "left": {
+			prev.focus();
+			prev.click();
+			break;
+		}
+		case "right": {
+			if (!allowNext) return notifyNotAllowed();
+			next.focus();
+			next.click();
+			break;
+		}
+	}
+});
+</script>
