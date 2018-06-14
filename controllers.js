@@ -21,24 +21,31 @@ function escapeHTML (html) {
 }
 
 function renderError (res, error) {
+	res.set({
+		"Content-Type": "text/html; charset=utf-8"
+	});
 	res.end(`
 		<head>
 			<title>Error!</title>
 			<style>::-webkit-scrollbar { display: none; }</style>
 		</head>
 		<body style="font-family: 'Fira Code', monospace; width: 50vw; margin: 25vh auto">
-			<h1 style="display: block; font-size: 3rem; margin-bottom: -1.75rem">Uh oh,</h1>
-			<p style="display: block; font-size: 1.5rem; color: rgb(150, 150, 150)">Something went wrong! 😱</p>
-			<code style="overflow-x: auto; display: block; color: rgb(248, 56, 79); background: rgb(20, 20, 36); margin: 0 -1rem; border-radius: 4px;">
-				<pre style="margin: 0; padding: 1rem;">${escapeHTML(error)}</pre>
+			<h1 style="display: block; font-size: 3rem; margin-bottom: -1.75rem">Oh no! 😱</h1>
+			<p style="display: block; font-size: 1.5rem; color: rgb(150, 150, 150)">INTERNAL SERVER ERROR ${error.code}: ${error.message.code}</p>
+			<p style="font-family: sans-serif; margin-top: 2rem; font-size: 2rem;">Don't worry, it's not your fault.</p>
+			<code style="margin-top: 4rem; overflow-x: auto; display: block; color: rgb(253, 94, 108); background: rgb(20, 20, 36); margin: 0 -1rem; border-radius: 4px;">
+				<pre style="margin: 0; padding: 1rem;">${escapeHTML(error.message)}</pre>
 			</code>
+			<p style="font-family: sans-serif; text-align: center; margin-top: 3rem;">Please notify a supervisor or technician. 🔧</p>
 		</body>
 	`);
 }
 module.exports.renderError = renderError;
 
 module.exports.pipeRender = async function pipeRender (folderOrIndex, locals) {
-	this.set("Content-Type", "text/html");
+	this.set({
+		"Content-Type": "text/html; charset=utf-8"
+	});
 	folderOrIndex = `${__dirname}/pages/${folderOrIndex}`;
 	try {
 		if (!folderOrIndex.includes("index.ejs")) folderOrIndex += "/index.ejs";
@@ -47,6 +54,9 @@ module.exports.pipeRender = async function pipeRender (folderOrIndex, locals) {
 		stream.pipe(this);
 		stream.end();
 	} catch (error) {
-		renderError(this, error);
+		renderError(this, {
+			message: error,
+			code: 500
+		});
 	}
 }

@@ -37,7 +37,10 @@ async function renderTraining (req, res) {
 		};
 		res.pipeRender("slide", locals);
 	} catch (error) {
-		renderError(res, error);
+		renderError(res, {
+			message: error,
+			code: 500
+		});
 	}
 }
 
@@ -59,6 +62,9 @@ async function editTraining (req, res) {
 		};
 		res.pipeRender("edit", locals);
 	} catch (error) {
-		renderError(res, error);
+		renderError(res, {
+			message: error,
+			code: 500
+		});
 	}
 }
