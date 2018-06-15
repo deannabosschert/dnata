@@ -53,14 +53,15 @@ function openSlide (slide) {
 
 const rem = Number(getComputedStyle(document.body).fontSize.slice(0, -2));
 function resizeSlides () {
-	const slides = document.querySelectorAll(".slide");
-	if (!slides[0]) return;
+	const wrappers = document.querySelectorAll(".slideWrapper");
+	if (!wrappers[0]) return;
 	const viewWidth = Number(getComputedStyle(document.body).width.slice(0, -2));
 	const sideWidth = document.querySelector("#sidebar").clientWidth;
 	const scale = (sideWidth - .66 * rem) / viewWidth;
-	const slideHeight = Number(getComputedStyle(slides[0]).height.slice(0, -2)) * scale + .5 * rem;
-	slides.forEach((slide, i) => {
-		slide.onclick = () => {
+	const slideHeight = Number(getComputedStyle(wrappers[0].querySelector(".slide")).height.slice(0, -2)) * scale + .5 * rem;
+	wrappers.forEach((wrapper, i) => {
+		const slide = wrapper.querySelector(".slide");
+		wrapper.onclick = () => {
 			openSlide(slide);
 		};
 		slide.style.transform = `scale(${scale})`;
@@ -70,7 +71,7 @@ function resizeSlides () {
 }
 window.addEventListener("resize", resizeSlides);
 resizeSlides();
-focusAndClickOn(document.querySelector(".slide"));
+focusAndClickOn(document.querySelector(".slideWrapper"));
 
 function createSlideWrapper () {
 	const wrapper = document.createElement("DIV");
@@ -104,7 +105,6 @@ function createDeleteButton (wrapper) {
 function createSlide () {
 	const slide = document.createElement("ARTICLE");
 	slide.classList.add("slide");
-	slide.tabIndex = 0;
 	return slide;
 }
 

@@ -72,4 +72,35 @@ document.body.addEventListener("keydown", event => {
 		}
 	}
 });
+
+//Block inspector
+function prevent (event) {
+	event.preventDefault();
+	return false;
+}
+
+//Remove (only) the open inspector functionality
+["keydown", "mousedown"].forEach(eventType => {
+	document.querySelector("html")[`on${eventType}`] = event => {
+		if (event.buttons === 2 || event.code === "F12" || event.code === "KeyI") prevent(event);
+	};
+});
+document.querySelector("html").oncontextmenu = event => {prevent(event)};
+
+//Add secret back-door for development
+let pressedCount = 0;
+function tryToOpenAnyway () {
+	pressedCount++;
+	setTimeout(() => {
+		if (pressedCount >= 3) {
+			pressedCount = 0;
+			document.querySelector("html").onkeydown = null;
+			document.querySelector("html").mousedown = null;
+			document.querySelector("html").oncontextmenu = null;
+		}
+	}, 250);
+}
+document.querySelector("html").addEventListener("keydown", event => {
+	if (event.code === "Minus") tryToOpenAnyway();
+});
 </script>

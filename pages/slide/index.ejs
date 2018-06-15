@@ -3,6 +3,11 @@ include(`../${folder}/index.ejs`, {
 	stylesheet: include("../slide/stylesheet.ejs"),
 	header: include("../slide/header.ejs"),
 	footer: include("../slide/footer.ejs"),
-	script: include("../slide/script.ejs")
+	script: include("../slide/script.ejs"),
+	daisy: (tip) => {
+		return include("../daisy/index.ejs", {
+			tip: tip
+		});
+	}
 });
 -%>

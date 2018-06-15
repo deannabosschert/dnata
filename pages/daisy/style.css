@@ -1,0 +1,64 @@
+.daisy {
+	position: absolute;
+	left: 70vw;
+	top: 50%;
+	overflow: hidden;
+	width: 30vw;
+	height: 20rem;
+	color: transparent;
+	pointer-events: none;
+}
+
+.daisy img {
+	width: 15rem;
+	transform: translateX(160%) rotate(-35deg);
+	transition: all .2s ease;
+	pointer-events: all;
+}
+
+.daisy img:hover {
+	transform: translateX(140%) rotate(-45deg);
+}
+
+.daisyTextbox {
+	transition: all .2s ease;
+	opacity: 0;
+	background: #f2f2f2;
+	padding: 1rem;
+	border-radius: .25rem 0 .25rem .25rem;
+	color: black;
+	width: 22.5rem;
+	display: inline-block;
+	position: relative;
+}
+
+.daisy>img+p {
+	opacity: 0;
+	color: rgb(var(--dnataBlue));
+	position: absolute;
+	top: 0;
+	transition: all .2s ease;
+}
+
+.daisy img:hover+p {
+	opacity: 1;
+	top: 3rem;
+}
+
+.daisy img:hover~.daisyTextbox {
+	transform: translateY(5rem);
+	opacity: 1;
+}
+
+.daisyTextbox::after {
+	content: "";
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: -1rem;
+	width: 0;
+	height: 0;
+	border: .5rem solid transparent;
+	border-top: .5rem solid #f2f2f2;
+	border-left: .5rem solid #f2f2f2;
+}

@@ -21,8 +21,8 @@
 		</div>
 		<div id="sidebar">
 			<% slides.forEach((slide, i) => { %>
-			<div class="slideWrapper">
-				<article class="slide" tabindex="0"><%- include(`${folder}/${id}/${slide}/index.ejs`) -%></article>
+			<div class="slideWrapper" tabindex="0">
+				<article class="slide"><%- include(`${folder}/${id}/${slide}/index.ejs`) -%></article>
 			</div>
 			<% }); %>
 			<button id="addSlide" class="addSlideButton" title="Nieuwe slide toevoegen"><img src="/edit/images/add.png" alt="Nieuwe slide toevoegen"></button>

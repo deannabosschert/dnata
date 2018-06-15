@@ -30,8 +30,15 @@ async function renderTraining (req, res) {
 		const trainingPath = `${__dirname}/pages/${req.params.trainingId}`;
 		const slides = (await readDir(trainingPath)).filter(async fileOrFolder => {
 			const fileOrFolderStats = await stats(`${trainingPath}/${fileOrFolder}`);
+			if (!fileOrFolder.includes("slide")) console.log(`"${fileOrFolder}" is not a valid directory; consider removing it from ${trainingPath}`);
 			return fileOrFolderStats.isDirectory() && fileOrFolder.includes("slide");
 		});
+		const consecutive = slides.every((slide, i) => {
+			const prevSlide = slides[i-1];
+			if (!prevSlide) return true;
+			return Number(prevSlide[prevSlide.length-1]) === Number(slide[slide.length-1]) - 1;
+		});
+		if (!consecutive) console.log(`Slides in ${req.params.trainingId} are not consecutive; Consider renaming them in order.`);
 		const slideNumber = Number(req.params.slideNumber);
 		const locals = {
 			id: req.params.trainingId,
@@ -62,7 +69,8 @@ async function editTraining (req, res) {
 			stylesheet: null,
 			header: null,
 			footer: null,
-			script: null
+			script: null,
+			daisy: ()=>{console.log("Cannot load daisy.")}
 		};
 		res.pipeRender("edit", locals);
 	} catch (error) {

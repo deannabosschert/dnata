@@ -142,11 +142,14 @@ body>aside {
 .slideWrapper {
 	position: relative;
 	margin-top: -.5rem;
+	cursor: pointer;
 } .slideWrapper>* {
 	transition: opacity .1s ease;
 	opacity: 0;
 } .slideWrapper:hover>* {
 	opacity: 1;
+} .slideWrapper:focus .slide {
+	outline: rgb(var(--dnataBlue)) solid 16px;
 }
 
 #sidebar .slide {
@@ -160,13 +163,12 @@ body>aside {
 	border-radius: 1rem;
 	transform-origin: left top;
 	position: absolute;
-	cursor: pointer;
 	border: 3px solid rgba(0, 0, 0, .1);
-} #sidebar .slide:hover {
+	pointer-events: none;
+	user-select: none;
+} #sidebar .slideWrapper:hover .slide,
+	#sidebar .slideWrapper:focus .slide {
 	box-shadow: 0 1rem 5rem 0 rgba(0, 0, 0, .25);
-} #sidebar .slide:focus {
-	box-shadow: 0 1rem 5rem 0 rgba(0, 0, 0, .25);
-	border: 1rem solid rgb(var(--dnataBlue));
 }
 
 .removeSlide {
