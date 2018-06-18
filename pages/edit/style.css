@@ -66,7 +66,7 @@ body>aside {
 	background: #F9F9F9;
 	color: rgb(30, 30, 52);
 	width: 20rem;
-	min-height: calc(100vh - 3rem);
+	height: calc(100vh - 3rem);
 	display: flex;
 }
 
@@ -148,7 +148,7 @@ body>aside {
 	opacity: 0;
 } .slideWrapper:hover>* {
 	opacity: 1;
-} .slideWrapper:focus .slide {
+} .slideWrapper.focus .slide {
 	outline: rgb(var(--dnataBlue)) solid 16px;
 }
 
@@ -200,7 +200,7 @@ main {
 }
 
 .menu {
-	display: none;
+	visibility: hidden;
 	width: 16rem;
 	background: rgba(255, 255, 255, .75);
 	border-radius: .125rem;
@@ -209,10 +209,12 @@ main {
 	padding: .5rem 0;
 	position: relative;
 	color: black;
+	z-index: 999;
 } #contextMenu {
 	position: absolute;
 	user-select: none;
 } .menu.show {
+	visibility: visible;
 	display: inline-block;
 } #contextMenu li {
 	display: inline-flex;
@@ -248,4 +250,20 @@ main {
 
 .blur {
 	filter: blur(4px) brightness(.9);
+}
+
+.dnata-title {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+	color: rgb(var(--dnataBlue));
+}
+
+.dnata-subtitle {
+	font-size: 1.5rem;
+	color: black;
+}
+
+.dnata-paragraph {
+	font-size: 1rem;
+	color: black;
 }

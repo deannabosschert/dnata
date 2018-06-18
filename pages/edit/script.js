@@ -36,38 +36,52 @@ headerAnchor.addEventListener("click", event => {
 	save();
 });
 
-function openSlide (slide) {
+function syncChanges (slide) {
 	const main = document.querySelector("body>main");
-	while (main.lastChild) {
-		main.lastChild.remove();
+	slide.querySelector("main").remove();
+	const newContent = main.cloneNode(true);
+	slide.appendChild(newContent);
+}
+
+function openSlide (slide) {
+	const wrappers = document.querySelectorAll(".slideWrapper");
+	const wrapper = slide.parentElement;
+	for (const wrapper of wrappers) {
+		wrapper.classList.remove("focus");
 	}
-	main.setAttribute("contenteditable", "");
-	main.addEventListener("DOMCharacterDataModified", () => {
+	wrapper.classList.add("focus");
+
+	const content = document.querySelector("body>main");
+	content.remove();
+	const newContent = slide.querySelector("main").cloneNode(true);
+	document.body.appendChild(newContent);
+	
+	newContent.setAttribute("contenteditable", "");
+	newContent.addEventListener("DOMCharacterDataModified", () => {
+		syncChanges(slide);
 		preventLeavingBeforeSaving();
 	});
-	for (const child of slide.childNodes) {
-		const clone = child.cloneNode(true);
-		main.appendChild(clone);
-	}
 }
 
 const rem = Number(getComputedStyle(document.body).fontSize.slice(0, -2));
 function resizeSlides () {
-	const wrappers = document.querySelectorAll(".slideWrapper");
-	if (!wrappers[0]) return;
-	const viewWidth = Number(getComputedStyle(document.body).width.slice(0, -2));
-	const sideWidth = document.querySelector("#sidebar").clientWidth;
-	const scale = (sideWidth - .66 * rem) / viewWidth;
-	const slideHeight = Number(getComputedStyle(wrappers[0].querySelector(".slide")).height.slice(0, -2)) * scale + .5 * rem;
-	wrappers.forEach((wrapper, i) => {
-		const slide = wrapper.querySelector(".slide");
-		wrapper.onclick = () => {
-			openSlide(slide);
-		};
-		slide.style.transform = `scale(${scale})`;
-		slide.style.animation = `fadein .5s ease ${i * 100}ms forwards`;
-		slide.parentElement.style.height = `${slideHeight + .5 * rem}px`;
-	});
+	setTimeout(() => {
+		const wrappers = document.querySelectorAll(".slideWrapper");
+		if (!wrappers[0]) return;
+		const viewWidth = Number(getComputedStyle(document.body).width.slice(0, -2));
+		const sideWidth = document.querySelector("#sidebar").clientWidth;
+		const scale = (sideWidth - .66 * rem) / viewWidth;
+		const slideHeight = Number(getComputedStyle(wrappers[0].querySelector(".slide")).height.slice(0, -2)) * scale + .5 * rem;
+		wrappers.forEach((wrapper, i) => {
+			const slide = wrapper.querySelector(".slide");
+			wrapper.onclick = () => {
+				openSlide(slide);
+			};
+			slide.style.transform = `scale(${scale})`;
+			slide.style.animation = `fadein .5s ease ${i * 100}ms forwards`;
+			slide.parentElement.style.height = `${slideHeight + .5 * rem}px`;
+		});
+	}, 10);
 }
 window.addEventListener("resize", resizeSlides);
 resizeSlides();
@@ -76,6 +90,7 @@ focusAndClickOn(document.querySelector(".slideWrapper"));
 function createSlideWrapper () {
 	const wrapper = document.createElement("DIV");
 	wrapper.classList.add("slideWrapper");
+	wrapper.tabIndex = 0;
 	return wrapper;
 }
 
@@ -92,11 +107,15 @@ function createDeleteButton (wrapper) {
 	button.addEventListener("mouseleave", () => {
 		img.src = "/edit/images/bin.png";
 	});
-	button.addEventListener("click", () => {
+	button.addEventListener("click", event => {
+		event.stopPropagation();
 		wrapper.addEventListener("transitionend", () => {
-			wrapper.remove();
+			wrapper.style.display = "none";
+			// undo-able maken?
 		});
 		wrapper.style = "transform-origin: center center; transform: scale(.25); opacity: 0";
+		document.querySelector("body>main").remove();
+		document.body.appendChild(document.createElement("MAIN"));
 		preventLeavingBeforeSaving();
 	});
 	return button;

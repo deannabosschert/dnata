@@ -11,7 +11,7 @@ function buildMenu (menu) {
 		}
 		const submenu = menuitem.querySelector("ul");
 		if (submenu) {
-			submenu.style.left = `${Number(getComputedStyle(menu).width.slice(0, -2)) / 2 + 2 * rem}px`;
+			submenu.style.left = `${contextmenu.getBoundingClientRect().width / 2 + 2 * rem}px`;
 			submenu.style.top = `${5 * rem}px`;
 			buildMenu(submenu);
 		}
@@ -20,9 +20,11 @@ function buildMenu (menu) {
 buildMenu(contextmenu);
 document.body.addEventListener("contextmenu", event => {
 	event.preventDefault();
+	const width = contextmenu.getBoundingClientRect().width;
+	const height = contextmenu.getBoundingClientRect().height;
 	contextmenu.classList.add("show");
-	contextmenu.style.left = `${event.clientX}px`;
-	contextmenu.style.top = `${event.clientY}px`;
+	contextmenu.style.left = `${Math.min(event.clientX, window.innerWidth - width)}px`;
+	contextmenu.style.top = `${Math.min(event.clientY, window.innerHeight - height)}px`;
 	document.querySelectorAll("body>*:not(#contextMenu)").forEach(element => {
 		element.classList.add("blur");
 	});
@@ -32,6 +34,8 @@ document.body.addEventListener("click", event => {
 	document.querySelectorAll(".menu.show").forEach(element => {
 		element.classList.remove("show");
 	});
+	contextmenu.style.left = "0px";
+	contextmenu.style.top = "0px";
 	document.querySelectorAll(".blur").forEach(element => {
 		element.classList.remove("blur");
 	});
@@ -41,33 +45,37 @@ function openMenuInside (menuitem) {
 	menuitem.parentElement.querySelectorAll(".show").forEach(element => {
 		element.classList.remove("show");
 	});
-	menuitem.querySelector("ul").classList.toggle("show");
+	menuitem.querySelector("ul.menu").classList.toggle("show");
 }
 
 function addTitle () {
 	const title = document.createElement("H1");
 	title.textContent = "Voer hier uw tekst in";
 	title.classList.add("dnata-title");
-	document.querySelector('body>main').appendChild(title);
+	const main = document.querySelector('body>main>main') || document.querySelector('body>main')
+	main.appendChild(title);
 }
 
 function addSubtitle () {
 	const subtitle = document.createElement("H2");
 	subtitle.textContent = "Voer hier uw tekst in";
 	subtitle.classList.add("dnata-subtitle");
-	document.querySelector('body>main').appendChild(subtitle);
+	const main = document.querySelector('body>main>main') || document.querySelector('body>main')
+	main.appendChild(subtitle);
 }
 
 function addParagraph () {
 	const paragraph = document.createElement("P");
 	paragraph.textContent = "Voer hier uw tekst in";
 	paragraph.classList.add("dnata-paragraph");
-	document.querySelector('body>main').appendChild(paragraph);
+	const main = document.querySelector('body>main>main') || document.querySelector('body>main')
+	main.appendChild(paragraph);
 }
 
 function addFigure () {
 	const img = document.createElement("IMG");
 	img.src = "./images/figure.png";
 	img.classList.add("srcEditable", "dnata-figure");
-	document.querySelector('body>main').appendChild(img);
+	const main = document.querySelector('body>main>main') || document.querySelector('body>main')
+	main.appendChild(img);
 }
