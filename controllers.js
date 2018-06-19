@@ -24,6 +24,7 @@ function renderError (res, error) {
 	res.set({
 		"Content-Type": "text/html; charset=utf-8"
 	});
+	res.status(error.code);
 	res.end(`
 		<head>
 			<title>Error!</title>
