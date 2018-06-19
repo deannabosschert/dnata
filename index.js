@@ -59,7 +59,7 @@ async function getSlides (req) {
 	}
 	const consecutive = items.every((slide, i) => {
 		const prevSlide = items[i-1];
-		if (!prevSlide) return item === "slide1";
+		if (!prevSlide) return slide === "slide1";
 		return Number(prevSlide[prevSlide.length-1]) === Number(slide[slide.length-1]) - 1;
 	});
 	if (!consecutive) console.log(`Critical Warning: Slides in ${req.params.trainingId} are not consecutive; consider renaming them in order.`);
