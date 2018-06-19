@@ -36,7 +36,7 @@ function renderError (res, error) {
 			<p style="display: block; font-size: 1.5rem; color: rgb(150, 150, 150)">INTERNAL SERVER ERROR ${error.code}: ${error.message.code}</p>
 			<p style="font-family: sans-serif; margin-top: 2rem; font-size: 2rem;">Don't worry, it's not your fault.</p>
 			<code style="margin-top: 4rem; overflow-x: auto; display: block; color: rgb(253, 94, 108); background: rgb(20, 20, 36); margin: 0 -1rem; border-radius: 4px;">
-				<pre style="margin: 0; padding: 1rem;">${escapeHTML(error.message)}</pre>
+				<pre style="margin: 0; padding: 1rem;">${escapeHTML(error.stack || error.message)}</pre>
 			</code>
 			<p style="font-family: sans-serif; text-align: center; margin-top: 3rem;">Please notify a supervisor or technician. 🔧</p>
 		</body>

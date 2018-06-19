@@ -27,7 +27,24 @@ function allowLeaving () {
 function save () {
 	headerAnchor.querySelector("img").src = "/edit/images/loading.png";
 	headerAnchor.style.animation = "loading 1s ease-in-out";
-	//actually save
+	const id = headerAnchor.dataset.id;
+	// MAKE SURE ONLY USERS WITH PROPER AUTHORISATION CAN EDIT
+	const slides = [];
+	document.querySelectorAll(".slide").forEach(slide => {
+		slides.push(`<html>${slide.innerHTML.replace(/\s+/g, (m) => {
+			if (m.match(/[\r\n\t\f\v]/g)) return "";
+			return " ";
+		})}</html>`);
+	});
+	const json = JSON.stringify({id: id, slides: slides});
+	fetch(new Request(`http://localhost:1337/save/${id}`), {
+		method: "POST",
+		body: json
+	})
+	.then(res => res.json())
+	.then(json => {
+		console.log(json);
+	});
 }
 
 headerAnchor.addEventListener("click", event => {

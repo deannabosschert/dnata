@@ -82,7 +82,8 @@ function prevent (event) {
 //Remove (only) the open inspector functionality
 ["keydown", "mousedown"].forEach(eventType => {
 	document.querySelector("html")[`on${eventType}`] = event => {
-		if (event.buttons === 2 || event.code === "F12" || event.code === "KeyI") prevent(event);
+		console.log(event.key)
+		if (event.buttons === 2 || ["f12", "i", "u"].includes(event.key.toLowerCase())) prevent(event);
 	};
 });
 document.querySelector("html").oncontextmenu = event => {prevent(event)};

@@ -5,9 +5,10 @@ const { promisify } = require("util");
 const fs = require("fs");
 const readDir = promisify(fs.readdir);
 const stats = promisify(fs.stat);
+const makeDir = promisify(fs.mkdir);
 const { pipeRender, renderError } = require("./controllers");
 const session = require("express-session");
-const bodyParser = require("body-parser").urlencoded({ extended: false });
+const bodyParser = require("body-parser");
 
 function attachPipeRender (req, res, next) {
   res.pipeRender = pipeRender;
@@ -15,7 +16,10 @@ function attachPipeRender (req, res, next) {
 }
 
 app.use(express.static("pages"));
-app.use(bodyParser);
+app.use(
+	bodyParser.urlencoded({ extended: false }),
+	bodyParser.text()
+);
 app.use(session({
   secret: "Gekste geheime dnata sessie",
   resave: false,
@@ -107,6 +111,28 @@ async function editTraining (req, res) {
 	}
 }
 
-function saveTraining (req, res) {
-	//
+async function saveTraining (req, res) {
+	try {
+		req.body = JSON.parse(req.body);
+		const path = `${__dirname}/pages/${req.body.id}`;
+		//Ensure path is safe (maybe take more precaution?)
+		if (path.match(/\.\/\\/g)) throw new Error("Path cannot contain dots or (back)slashes!");
+
+		//backup
+		const date = new Date();
+		const dateString = `${date.getFullYear()}_${date.getMonth()}_${date.getDay()}`;
+		fs.renameSync(path, `${path}_BACKUP_${dateString}`);
+
+		//Save new training
+
+		res.end(JSON.stringify({
+			ok: true,
+			body: req.body
+		}));
+	} catch (err) {
+		res.end(JSON.stringify({
+			ok: false,
+			error: err.stack
+		}));
+	}
 }
