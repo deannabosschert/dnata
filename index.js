@@ -5,10 +5,12 @@ const { promisify } = require("util");
 const fs = require("fs");
 const readDir = promisify(fs.readdir);
 const stats = promisify(fs.stat);
-const makeDir = promisify(fs.mkdir);
+const writeFile = promisify(fs.writeFile);
 const { pipeRender, renderError } = require("./controllers");
-const session = require("express-session");
 const bodyParser = require("body-parser");
+const copyDir = promisify(require("ncp").ncp);
+const mkdirp = require("mkdirp");
+const dirName = require("path").dirname;
 
 function attachPipeRender (req, res, next) {
   res.pipeRender = pipeRender;
@@ -20,11 +22,6 @@ app.use(
 	bodyParser.urlencoded({ extended: false }),
 	bodyParser.text()
 );
-app.use(session({
-  secret: "Gekste geheime dnata sessie",
-  resave: false,
-	saveUninitialized: false
-}));
 app.use(attachPipeRender);
 app.get("/", loadTrainings);
 app.get("/view/:trainingId/:slideNumber", renderTraining);
@@ -46,7 +43,7 @@ async function loadTrainings (req, res) {
 	for (const i in items) {
 		const item = items[i];
 		const itemStats = await stats(`${path}/${item}`);
-		if (itemStats.isDirectory() && !["daisy", "edit", "overview", "slide"].includes(item)) trainings.push(item);
+		if (itemStats.isDirectory() && !["daisy", "edit", "overview", "slide", "backups"].includes(item)) trainings.push(item);
 	}
 	res.pipeRender("overview", { trainings: trainings });
 }
@@ -58,7 +55,7 @@ async function getSlides (req) {
 	for (const i in items) {
 		const item = items[i];
 		const itemStats = await stats(`${trainingPath}/${item}`);
-		if (!(item.includes("slide") || item.includes("BACKUP"))) console.log(`Warning: "${item}" is not a valid slide directory; consider removing it from ${trainingPath}`);
+		if (!item.includes("slide")) console.log(`Warning: "${item}" is not a valid slide directory; consider removing it from ${trainingPath}`);
 		if (itemStats.isDirectory() && item.includes("slide")) slides.push(item);
 	}
 	const consecutive = items.every((slide, i) => {
@@ -66,7 +63,7 @@ async function getSlides (req) {
 		if (!prevSlide) return slide === "slide1";
 		return Number(prevSlide[prevSlide.length-1]) === Number(slide[slide.length-1]) - 1;
 	});
-	if (!consecutive) console.log(`Critical Warning: Slides in ${req.params.trainingId} are not consecutive; consider renaming them in order.`);
+	if (!consecutive) console.log(`Critical Warning: Slides in ${req.params.trainingId} are not consecutive; rename them in order!`);
 	return slides;
 }
 
@@ -111,6 +108,46 @@ async function editTraining (req, res) {
 	}
 }
 
+function padLeft (str, padString = " ", targetLength) {
+	if (typeof str !== "string") str = str.toString();
+	if (str.length > targetLength) return str;
+	return padString.repeat(Math.max(0, targetLength - str.length)) + str;
+}
+
+function fileExists (path) {
+	return new Promise((resolve, reject) => {
+		fs.access(path, err => {
+			resolve(err ? false : true);
+		});
+	});
+}
+
+function writeNewFile (path, data) {
+	mkdirp(dirName(path), async err => {
+		if (err) throw err;
+		return await writeFile(path, data);
+	});
+}
+
+function saveTrainingFile (path, data) {
+	return new Promise(async (resolve, reject) => {
+		//Check if path exists
+		if (!await fileExists(path)) {
+			resolve(await writeNewFile(path, data));
+		} else {
+			const stream = fs.createWriteStream(path);
+			stream.on("close", () => {
+				resolve(true);
+			});
+			stream.on("error", err => {
+				reject(err);
+			});
+			stream.write(data);
+			stream.close();
+		}
+	});
+}
+
 async function saveTraining (req, res) {
 	try {
 		req.body = JSON.parse(req.body);
@@ -120,19 +157,24 @@ async function saveTraining (req, res) {
 
 		//backup
 		const date = new Date();
-		const dateString = `${date.getFullYear()}_${date.getMonth()}_${date.getDay()}`;
-		fs.renameSync(path, `${path}_BACKUP_${dateString}`);
+		const dateString = `${date.getFullYear()}_${padLeft(date.getMonth(), "0", 2)}_${padLeft(date.getDay(), "0", 2)}`;
+		await copyDir(path, `${__dirname}/pages/backups/${req.body.id} BACKUP_${dateString}`);
 
-		//Save new training
+		//overwrite old
+		for (const i in req.body.slides) {
+			const html = req.body.slides[i];
+			await saveTrainingFile(`${path}/slide${Number(i) + 1}/index.ejs`, html);
+		}
 
 		res.end(JSON.stringify({
 			ok: true,
 			body: req.body
 		}));
 	} catch (err) {
+		console.log(err);
 		res.end(JSON.stringify({
 			ok: false,
-			error: err.stack
+			error: err.stack || err
 		}));
 	}
 }

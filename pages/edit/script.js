@@ -30,11 +30,15 @@ function save () {
 	const id = headerAnchor.dataset.id;
 	// MAKE SURE ONLY USERS WITH PROPER AUTHORISATION CAN EDIT
 	const slides = [];
-	document.querySelectorAll(".slide").forEach(slide => {
-		slides.push(`<html>${slide.innerHTML.replace(/\s+/g, (m) => {
+	document.querySelectorAll(".slide:not(.deleted)").forEach(slide => {
+		slide.querySelectorAll("*").forEach(node => {
+			node.removeAttribute("contenteditable");
+		});
+		const html = `<html><%- stylesheet -%><%- header -%>${slide.innerHTML.replace(/\s+/g, (m) => {
 			if (m.match(/[\r\n\t\f\v]/g)) return "";
 			return " ";
-		})}</html>`);
+		})}<%- footer -%><%- script -%></html>`;
+		slides.push(html);
 	});
 	const json = JSON.stringify({id: id, slides: slides});
 	fetch(new Request(`http://localhost:1337/save/${id}`), {
@@ -128,6 +132,7 @@ function createDeleteButton (wrapper) {
 		event.stopPropagation();
 		wrapper.addEventListener("transitionend", () => {
 			wrapper.style.display = "none";
+			wrapper.querySelector(".slide").classList.add("deleted");
 			// undo-able maken?
 		});
 		wrapper.style = "transform-origin: center center; transform: scale(.25); opacity: 0";
@@ -140,6 +145,9 @@ function createDeleteButton (wrapper) {
 
 function createSlide () {
 	const slide = document.createElement("ARTICLE");
+	const main = document.createElement("MAIN");
+	main.id = `slide${document.querySelectorAll(".slide:not(.deleted)").length + 1}`;
+	slide.appendChild(main);
 	slide.classList.add("slide");
 	return slide;
 }
@@ -183,3 +191,8 @@ const buttonlessSlideWrappers = Array.from(document.querySelectorAll(".slideWrap
 for (const wrapper of buttonlessSlideWrappers) {
 	wrapper.appendChild(createDeleteButton(wrapper));
 }
+
+//Click on the first slide (delay is required, idk how long but 1sec is okay).
+setTimeout(() => {
+	focusAndClickOn(document.querySelector(".slideWrapper"));
+}, 1000);
