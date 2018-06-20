@@ -82,8 +82,7 @@ function prevent (event) {
 //Remove (only) the open inspector functionality
 ["keydown", "mousedown"].forEach(eventType => {
 	document.querySelector("html")[`on${eventType}`] = event => {
-		console.log(event.key)
-		if (event.buttons === 2 || ["f12", "i", "u"].includes(event.key.toLowerCase())) prevent(event);
+		if (event.buttons === 2 || ["f12", "i", "u"].includes((event.key || "").toLowerCase())) prevent(event);
 	};
 });
 document.querySelector("html").oncontextmenu = event => {prevent(event)};
@@ -94,11 +93,11 @@ function tryToOpenAnyway () {
 	pressedCount++;
 	setTimeout(() => {
 		if (pressedCount >= 3) {
-			pressedCount = 0;
 			document.querySelector("html").onkeydown = null;
 			document.querySelector("html").mousedown = null;
 			document.querySelector("html").oncontextmenu = null;
 		}
+		pressedCount = 0;
 	}, 250);
 }
 document.querySelector("html").addEventListener("keydown", event => {

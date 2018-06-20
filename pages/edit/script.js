@@ -35,8 +35,7 @@ function save () {
 			node.removeAttribute("contenteditable");
 		});
 		const html = `<html><%- stylesheet -%><%- header -%>${slide.innerHTML.replace(/\s+/g, (m) => {
-			if (m.match(/[\r\n\t\f\v]/g)) return "";
-			return " ";
+			return m.charAt(0);
 		})}<%- footer -%><%- script -%></html>`;
 		slides.push(html);
 	});
@@ -47,7 +46,9 @@ function save () {
 	})
 	.then(res => res.json())
 	.then(json => {
-		console.log(json);
+		console.groupCollapsed(`POST: Request ${json.ok ? "succeeded" : "failed"}.`);
+		console.log("Response:", json.body || json.error);
+		console.groupEnd();
 	});
 }
 
@@ -55,6 +56,13 @@ headerAnchor.addEventListener("click", event => {
 	if (!preventLeaving) return;
 	event.preventDefault();
 	save();
+});
+window.addEventListener("keydown", event => {
+	if (event.ctrlKey && event.key === "s") {
+		event.preventDefault();
+		if (!preventLeaving) return alert("There is nothing to be saved.");
+		save();
+	}
 });
 
 function syncChanges (slide) {
@@ -79,14 +87,19 @@ function openSlide (slide) {
 	
 	newContent.setAttribute("contenteditable", "");
 	newContent.addEventListener("DOMCharacterDataModified", () => {
-		syncChanges(slide);
+		if (window.currentTimeout) clearTimeout(window.currentTimeout);
+		window.currentTimeout = setTimeout(() => {
+			syncChanges(slide);
+		}, 1000);
 		preventLeavingBeforeSaving();
 	});
 }
 
 const rem = Number(getComputedStyle(document.body).fontSize.slice(0, -2));
 function resizeSlides () {
-	setTimeout(() => {
+	if (window.resizeTimeout) clearTimeout(window.resizeTimeout);
+	window.resizeTimeout = setTimeout(() => {
+		console.log("resizing...")
 		const wrappers = document.querySelectorAll(".slideWrapper");
 		if (!wrappers[0]) return;
 		const viewWidth = Number(getComputedStyle(document.body).width.slice(0, -2));
@@ -102,7 +115,7 @@ function resizeSlides () {
 			slide.style.animation = `fadein .5s ease ${i * 100}ms forwards`;
 			slide.parentElement.style.height = `${slideHeight + .5 * rem}px`;
 		});
-	}, 10);
+	}, 1000);
 }
 window.addEventListener("resize", resizeSlides);
 resizeSlides();
@@ -146,7 +159,10 @@ function createDeleteButton (wrapper) {
 function createSlide () {
 	const slide = document.createElement("ARTICLE");
 	const main = document.createElement("MAIN");
+	const style = document.createElement("STYLE");
 	main.id = `slide${document.querySelectorAll(".slide:not(.deleted)").length + 1}`;
+	style.textContent = `#${main.id} {padding: 5rem 15rem 0 15rem}`;
+	slide.appendChild(style);
 	slide.appendChild(main);
 	slide.classList.add("slide");
 	return slide;
