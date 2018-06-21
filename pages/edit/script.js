@@ -211,3 +211,23 @@ for (const wrapper of buttonlessSlideWrappers) {
 setTimeout(() => {
 	focusAndClickOn(document.querySelector(".slideWrapper"));
 }, 1000);
+
+const zenModeButton = document.querySelector("#zenmode");
+zenModeButton.addEventListener("click", () => {
+	zenModeButton.classList.toggle("active");
+	const img = zenModeButton.querySelector("img");
+	const sidebar = document.querySelector("#sidebar");
+	const aside = document.querySelector("aside");
+	if (zenModeButton.classList.contains("active")) {
+		//close menu
+		img.src = "/edit/images/eye_closed.png";
+		sidebar.style.display = "none";
+		aside.style.width = "3.5rem";
+	} else {
+		//open menu
+		img.src = "/edit/images/eye_open.png";
+		[sidebar, aside].forEach(element => {
+			element.removeAttribute("style");
+		})
+	}
+});

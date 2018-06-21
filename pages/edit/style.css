@@ -68,6 +68,7 @@ body>aside {
 	width: 20rem;
 	height: calc(100vh - 3rem);
 	display: flex;
+	transition: width ease-out .2s;
 }
 
 #toolbar,
@@ -89,6 +90,7 @@ body>aside {
 #toolbar {
 	flex-basis: 3.5rem;
 	border-right: 1px solid rgba(0, 0, 0, .05);
+	position: relative;
 } #toolbar>* {
 	height: 3.5rem;
 } #toolbar>button {
@@ -101,6 +103,9 @@ body>aside {
 	filter: saturate(1);
 } #toolbar>button>img {
 	width: 50%;
+} #toolbar>button:last-of-type {
+	position: absolute;
+	bottom: 0;
 }
 
 #sidebar {

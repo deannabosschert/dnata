@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="/edit/style.css">
 	<title>Editing <%- id -%></title>
 </head>
-<body>
+<body id="editor">
 	<header>
 		<a href="/" title="Terug" data-id="<%-id-%>"><img src="/edit/images/prev.png"></a>
 		<h1><%- id -%> aanpassen</h1>
@@ -18,6 +18,7 @@
 			<!--<button title="Layout kiezen"><img src="/edit/images/layout.png" alt="Layout kiezen"></button>-->
 			<button title="Template kiezen"><img src="/edit/images/template.png" alt="Template kiezen"></button>
 			<button title="Nieuwe slide toevoegen" class="addSlideButton"><img src="/edit/images/add.png" alt="Nieuwe slide toevoegen"></button>
+			<button title="Zen-modus" id="zenmode"><img src="/edit/images/eye_open.png" alt="Zen-modus"></button>
 		</div>
 		<div id="sidebar">
 			<% slides.forEach((slide, i) => { %>
