@@ -99,7 +99,6 @@ const rem = Number(getComputedStyle(document.body).fontSize.slice(0, -2));
 function resizeSlides () {
 	if (window.resizeTimeout) clearTimeout(window.resizeTimeout);
 	window.resizeTimeout = setTimeout(() => {
-		console.log("resizing...")
 		const wrappers = document.querySelectorAll(".slideWrapper");
 		if (!wrappers[0]) return;
 		const viewWidth = Number(getComputedStyle(document.body).width.slice(0, -2));
