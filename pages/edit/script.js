@@ -163,6 +163,7 @@ function createSlide () {
 	style.textContent = `#${main.id} {padding: 5rem 15rem 0 15rem}`;
 	slide.appendChild(style);
 	slide.appendChild(main);
+	slide.tabIndex = -1;
 	slide.classList.add("slide");
 	return slide;
 }
