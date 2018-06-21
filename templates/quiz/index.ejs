@@ -1,0 +1,125 @@
+<html>
+	<%- stylesheet -%>
+	<%- header -%>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<style>
+		#__SLIDENUM__ {
+			padding: 5rem 33% 0 33%;
+			position: relative;
+		}
+
+		#__SLIDENUM__ h1 {
+			font-size: 3rem;
+			margin-bottom: 1rem;
+			color: rgb(var(--dnataBlue));
+		}
+
+		#__SLIDENUM__ img {
+			position: absolute;
+			left: 15%;
+		}
+
+		#__SLIDENUM__ p {
+			transition: all .2s ease;
+		}
+
+		#__SLIDENUM__ p+p {
+			margin-top: 1rem;
+		}
+
+		#__SLIDENUM__ p+button:first-of-type {
+			margin-top: 3rem;
+		}
+
+		#__SLIDENUM__ button {
+			padding: 1rem 1.5rem;
+			color: black;
+			background: #F2F2F2;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-family: inherit;
+			font-size: 1.125rem;
+			text-align: left;
+			transition: all .2s ease;
+		}
+
+		#__SLIDENUM__ button:hover,
+		#__SLIDENUM__ button:focus {
+			color: white;
+			background: rgb(var(--dnataBlue));
+		}
+
+		#__SLIDENUM__ button~button {
+			margin-top: 1rem;
+		}
+
+		#__SLIDENUM__ button+p {
+			transition: all 1s ease;
+			opacity: 0;
+			height: 0;
+			margin-top: 1rem;
+		}
+	</style>
+	<title>TITEL</title>
+	<main id="__SLIDENUM__">
+		<h1>Quiz</h1>
+		<h1 class="dnata-title">Title</h1>
+		<h2 class="dnata-subtitle">Subtitle</h2>
+		<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+		<p>Architecto eius libero molestias voluptatibus? Maiores error, accusantium eum harum hic fugiat non nemo veritatis nobis?</p>
+		<p>Laboriosam ab cumque error repellendus molestiae?</p>
+		<%- daisy("Tip voor deze slide") -%>
+		<button id="yes">Yes</button>
+		<p class="answer">Are you sure?</p>
+		<button id="no">No</button>
+		<p class="answer">That is right!</p>
+	</main>
+	<%- footer -%>
+	<%- script -%>
+	<script>
+		const yes = document.querySelector("#yes");
+		const no = document.querySelector("#no");
+		const next = document.querySelector("#next");
+		next.setAttribute("disabled", "");
+
+		yes.addEventListener("click", () => {
+			document.querySelector("#yes+p").style = `
+				opacity: 1;
+				height: unset;
+			`;
+			yes.style = `
+				background: #d31a2f;
+				color: white;
+			`;
+			hideText();
+		});
+
+		no.addEventListener("click", () => {
+			no.style = `
+				background: rgb(var(--dnataGreen));
+				color: white;
+			`;
+			document.querySelector("#no+p").style = `
+				opacity: 1;
+				height: unset;
+			`;
+			document.querySelector("#yes+p").remove();
+			yes.remove();
+			hideText();
+			allowNextSlide();
+		});
+
+		function hideText () {
+			document.querySelectorAll("#__SLIDENUM__>p:not(.answer)").forEach(p => {
+				p.remove();
+			});
+		}
+
+		function allowNextSlide () {
+			next.removeAttribute("disabled");
+		}
+	</script>
+</html>

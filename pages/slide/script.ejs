@@ -66,6 +66,7 @@ document.body.addEventListener("keydown", event => {
 		}
 		case "right": {
 			if (!allowNext) return notifyNotAllowed();
+			if (next.disabled) return;
 			next.focus();
 			next.click();
 			break;
@@ -80,9 +81,10 @@ function prevent (event) {
 }
 
 //Remove (only) the open inspector functionality
+const disallowedButtons = ["f11", "f12", "i", "u", "c"];
 ["keydown", "mousedown"].forEach(eventType => {
 	document.querySelector("html")[`on${eventType}`] = event => {
-		if (event.buttons === 2 || ["f12", "i", "u"].includes((event.key || "").toLowerCase())) prevent(event);
+		if (event.buttons === 2 || disallowedButtons.includes((event.key || "").toLowerCase())) prevent(event);
 	};
 });
 document.querySelector("html").oncontextmenu = event => {prevent(event)};
