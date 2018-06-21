@@ -8,11 +8,19 @@
 	<title>Document</title>
 </head>
 <body>
-	<% for (const training of trainings) { %>
-	<article>
-		<h1><%- training -%></h1>
-		blahbalhanbalhlal
-	</article>
-	<% } %>
+	<header>
+		<div id="logo">
+			<img src="/slide/logo.png" alt="Logo">
+		</div>
+	</header>
+	<main>
+		<% for (const training of trainings.concat(["test1","test2", "test3", "test4", "test5", "test6"])) { %>
+		<article>
+			<h1><%- training -%></h1>
+			<a href="/view/<%- training -%>">Bekijken</a>
+			<a href="/edit/<%- training -%>">Aanpassen</a>
+		</article>
+		<% } %>
+	</main>
 </body>
 </html>
