@@ -17,12 +17,12 @@ function attachPipeRender (req, res, next) {
   next();
 }
 
-app.use(express.static("pages"));
 app.use(
+	express.static("pages"),
 	bodyParser.urlencoded({ extended: false }),
-	bodyParser.text()
+	bodyParser.text(),
+	attachPipeRender
 );
-app.use(attachPipeRender);
 app.get("/", loadTrainings);
 app.get("/view/:trainingId/:slideNumber", renderTraining);
 app.get("/view/:trainingId", (req, res) => {
